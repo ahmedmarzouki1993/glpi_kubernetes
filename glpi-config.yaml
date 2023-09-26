@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: glpi-config
+data:
+  TIMEZONE: Europe/Brussels
+  VERSION_GLPI: 10.0.7

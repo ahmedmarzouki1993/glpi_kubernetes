@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: glpi
+  labels:
+    app: glpi
+spec:
+  selector:
+    app: glpi
+  type: NodePort
+  ports:
+  - name: glpi
+    port: 80
+    targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mariadb
+  labels:
+    app: mariadb
+spec:
+  selector:
+    app: glpi
+  type: NodePort
+  ports:
+  - name: mariadb
+    port: 3306
+    targetPort: 3306

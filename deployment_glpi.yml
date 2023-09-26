@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: glpi-deployment
+  labels:
+    app: glpi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: glpi
+  template:
+    metadata:
+      labels:
+        app: glpi
+    spec:
+      containers:
+        - name: glpi
+          image: ahmedmarzouki1993/glpi_automation
+          ports: 
+            - containerPort: 80
+          volumeMounts:
+            - name: glpi-persistent-storage
+              mountPath: /var/www/html/glpi
+          env:
+            - name: TIMEZONE
+              valueFrom:
+                configMapKeyRef:
+                  name: glpi-config
+                  key: TIMEZONE
+            - name : VERSION_GLPI
+              valueFrom:
+                configMapKeyRef:
+                  name: glpi-config
+                  key: VERSION_GLPI
+
+
+
+        - name: mariadb
+          image: mariadb:10.7
+          env:
+          - name: MARIADB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-secret
+                key: MARIADB_ROOT_PASSWORD
+          - name: MARIADB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-secret
+                key: MARIADB_DATABASE
+          - name: MARIADB_USER
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-secret
+                key: MARIADB_USER
+          - name: MARIADB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mariadb-secret
+                key: MARIADB_PASSWORD
+          ports:
+          - containerPort: 3306
+          volumeMounts:
+          - name: mariadb-persistent-storage
+            mountPath: /var/lib/mysql
+      volumes:
+        - name: glpi-persistent-storage
+          hostPath:
+            path: /var/www/html/glpi
+        - name: mariadb-persistent-storage
+          hostPath:
+            path: /var/lib/mysql
