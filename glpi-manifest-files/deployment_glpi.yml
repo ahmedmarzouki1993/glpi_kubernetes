@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: glpi
-          image: ahmedmarzouki1993/glpi_automation
+  image: ahmedmarzouki1993/glpi_automation:fab4d695
           ports: 
             - containerPort: 80
           volumeMounts:
